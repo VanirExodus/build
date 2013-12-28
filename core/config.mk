@@ -702,4 +702,7 @@ ifneq ($(TARGET_COPY_FILES_OVERRIDES),)
     PRODUCT_COPY_FILES := $(filter-out $(TARGET_COPY_FILES_OVERRIDES), $(PRODUCT_COPY_FILES))
 endif
 
+# Rules for QCOM targets
+include $(BUILD_SYSTEM)/qcom_target.mk
+
 include $(BUILD_SYSTEM)/dumpvar.mk
