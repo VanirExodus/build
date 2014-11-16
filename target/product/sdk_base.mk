@@ -31,12 +31,9 @@ PRODUCT_PACKAGES := \
 	LegacyCamera \
 	librs_jni \
 	libwnndict \
-	libWnnEngDic \
-	libWnnJpnDic \
 	LiveWallpapersPicker \
 	Mms \
 	Music \
-	OpenWnn \
 	Protips \
 	rild \
 	SdkSetup \
@@ -60,7 +57,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGE_OVERLAYS := development/sdk_overlay
 
 PRODUCT_COPY_FILES := \
-	device/generic/goldfish/data/etc/apns-conf.xml:system/etc/apns-conf.xml \
 	frameworks/base/data/sounds/effects/camera_click.ogg:system/media/audio/ui/camera_click.ogg \
 	frameworks/base/data/sounds/effects/VideoRecord.ogg:system/media/audio/ui/VideoRecord.ogg \
 	device/generic/goldfish/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
