@@ -38,7 +38,7 @@ MAXIMUM_OVERDRIVE           ?= true
 NO_DEBUG_SYMBOL_FLAGS       ?= true
 NO_DEBUG_FRAME_POINTERS     ?= true
 USE_GRAPHITE                ?=
-USE_FSTRICT_FLAGS           ?=
+USE_FSTRICT_FLAGS           ?= true
 USE_BINARY_FLAGS            ?=
 USE_EXTRA_CLANG_FLAGS       ?=
 ADDITIONAL_TARGET_ARM_OPT   ?=
@@ -89,9 +89,76 @@ ifeq ($(USE_GRAPHITE),true)
 endif
 
 # fstrict-aliasing. Thumb is defaulted off for AOSP. Use VANIR_SPECIAL_CASE_MODULES to
-# temporarily disable fstrict-aliasing locally until properly fixed.
+# temporarily disable fstrict-aliasing locally in modules we dont care about or until the
+# error it contains is properly fixed.
 ifeq ($(USE_FSTRICT_FLAGS),true)
-    VANIR_SPECIAL_CASE_MODULES :=
+  VANIR_SPECIAL_CASE_MODULES := \
+	libc_bionic \
+    libandroid_runtime \
+    libziparchive-host \
+    libpdfiumcore \
+	libpdfium \
+	libc_dns \
+	libc_tzcode \
+	libc_openbsd \
+	libc \
+	logd \
+	mdnsd \
+	libziparchive \
+	libdiskconfig \
+	libtwrpmtp \
+	libfusetwrp \
+	libguitwrp \
+	busybox \
+	static_busybox \
+	libuclibcrpc \
+	ping \
+	ping6 \
+	libjavacore \
+	libfdlibm \
+	libvariablespeed \
+	librtp_jni \
+	libdownmix \
+	libldnhncr \
+	libqcomvisualizer \
+	libwilhelm \
+	libvisualizer \
+	libstagefright_webm \
+	libmedia \
+	libreverb \
+	libaudioflinger \
+	libmediaplayerservice \
+	libstagefright_soft_h264dec \
+	libmusicbundle \
+	libstlport \
+	libutils \
+	libandroidfw \
+	dnsmasq \
+	libwebviewchromium \
+	libwebviewchromium_loader \
+	libwebviewchromium_plat_support \
+	content_content_renderer_gyp \
+	net_net_gyp \
+	third_party_WebKit_Source_modules_modules_gyp \
+	third_party_WebKit_Source_platform_blink_platform_gyp \
+	third_party_WebKit_Source_core_webcore_remaining_gyp \
+	third_party_angle_src_translator_lib_gyp \
+	third_party_WebKit_Source_core_webcore_generated_gyp \
+	libc_gdtoa \
+	libc_nomalloc \
+	libft2 \
+	libjni_jpegstream \
+	gatt_testtool \
+	bluetooth.default \
+	sensors.$(TARGET_BOOTLOADER_BOARD_NAME) \
+	libnvvisualizer
+
+# external/ffmpeg
+  VANIR_SPECIAL_CASE_MODULES += \
+	libavcodec \
+	libavutil \
+	libavformat \
+	libswscale
 
   FSTRICT_FLAGS := \
           -fstrict-aliasing \
