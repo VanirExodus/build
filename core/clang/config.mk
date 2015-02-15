@@ -58,6 +58,8 @@ CLANG_CONFIG_UNKNOWN_CFLAGS := \
   -Wno-maybe-uninitialized \
   -Wno-error=maybe-uninitialized \
   -fno-canonical-system-headers \
+  -mfpu=neon-vfpv4 \
+  -mfpu=neon \
   $(GRAPHITE_FLAGS)
 
 # Clang flags for all host rules
