@@ -146,8 +146,6 @@ ifeq ($(USE_FSTRICT_FLAGS),true)
     libnvvisualizer \
     libOmxVdec \
     libOmxVenc \
-    libpdfium \
-    libpdfiumcore \
     libqcomvisualizer \
     libreverb \
     librtp_jni \
