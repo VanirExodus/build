@@ -79,7 +79,7 @@ TARGET_GLOBAL_CFLAGS += \
 			-funwind-tables \
 			-Wa,--noexecstack \
 			-Werror=format-security \
-			-D_FORTIFY_SOURCE=2 \
+			-D_FORTIFY_SOURCE=$(FORTIFY_SOURCE_LEVEL) \
 			-fno-short-enums \
 			-no-canonical-prefixes \
 			-fno-canonical-system-headers \

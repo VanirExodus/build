@@ -105,7 +105,7 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 			-fstack-protector \
 			-Wa,--noexecstack \
 			-Werror=format-security \
-			-D_FORTIFY_SOURCE=2 \
+			-D_FORTIFY_SOURCE=$(FORTIFY_SOURCE_LEVEL) \
 			-fno-short-enums \
 			-no-canonical-prefixes \
 			-fno-canonical-system-headers \
