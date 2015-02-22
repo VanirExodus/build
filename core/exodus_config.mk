@@ -35,6 +35,8 @@
 # FSTRICT_ALIASING_WARNING_LEVEL := 0-3 for the level of intensity the compiler checks for violations
 # USE_LTO := true builds the listed modules with the -flto flags
 
+BOARDCONFIG_MALLOC := MALLOC_IMPL
+
 # SET GLOBAL CONFIGURATION HERE:
 MAXIMUM_OVERDRIVE           ?= true
 NO_DEBUG_SYMBOL_FLAGS       ?= true
@@ -44,6 +46,7 @@ USE_LTO                     ?= true
 USE_FSTRICT_FLAGS           ?= true
 USE_BINARY_FLAGS            ?=
 USE_EXTRA_CLANG_FLAGS       ?=
+MALLOC_IMPL                 ?= dlmalloc
 ADDITIONAL_TARGET_ARM_OPT   ?=
 ADDITIONAL_TARGET_THUMB_OPT ?=
 
@@ -62,6 +65,7 @@ ifeq ($(BONE_STOCK),true)
   USE_FSTRICT_FLAGS       :=
   USE_BINARY_FLAGS        :=
   USE_EXTRA_CLANG_FLAGS   :=
+  MALLOC_IMPL             := BOARDCONFIG_MALLOC
   VANIR_ARM_OPT_LEVEL     := -O2
   VANIR_THUMB_OPT_LEVEL   := -Os
   FSTRICT_ALIASING_WARNING_LEVEL := 2
