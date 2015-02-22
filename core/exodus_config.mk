@@ -33,6 +33,7 @@
 # ADDITIONAL_TARGET_THUMB_OPT := Additional flags may be appended here for GCC-specific modules
 # VANIR_ARM_OPT_LEVEL := -Ox for TARGET_arm_CFLAGS, preserved in binary.mk
 # VANIR_THUMB_OPT_LEVEL := -Ox for TARGET_thumb_CFLAGS, preserved in binary.mk
+# FORTIFY_SOURCE_LEVEL := 0-2 set the level for fortify source for target_arm(64) builds. default value is 2
 # FSTRICT_ALIASING_WARNING_LEVEL := 0-3 for the level of intensity the compiler checks for violations
 # USE_LTO := true builds the listed modules with the -flto flags
 
@@ -52,6 +53,7 @@ ADDITIONAL_TARGET_THUMB_OPT ?=
 # Set some defaults
 VANIR_ARM_OPT_LEVEL         ?= -O2
 VANIR_THUMB_OPT_LEVEL       ?= -Os
+FORTIFY_SOURCE_LEVEL        ?= 0
 FSTRICT_ALIASING_WARNING_LEVEL ?= 2
 
 # Respect BONE_STOCK: strictly enforce AOSP defaults.
@@ -67,6 +69,7 @@ ifeq ($(BONE_STOCK),true)
   EXODUS_BIONIC_OPTIMIZATIONS :=
   VANIR_ARM_OPT_LEVEL     := -O2
   VANIR_THUMB_OPT_LEVEL   := -Os
+  FORTIFY_SOURCE_LEVEL    := 1
   FSTRICT_ALIASING_WARNING_LEVEL := 2
   ADDITIONAL_TARGET_ARM_OPT   :=
   ADDITIONAL_TARGET_THUMB_OPT :=
@@ -94,24 +97,25 @@ endif
 
 # Assign modules to build with link time optimizations using VANIR_LTO_MODULES.
 ifeq ($(USE_LTO),true)
-  VANIR_LTO_MODULES := \
+  EXODUS_LTO_MODULES := \
     core.art \
+    dalvikvm \
+    dalvikvm32 \
+    dalvikvm64 \
     libart \
     libart-compiler \
     libartd \
     libartd-compiler \
     libart-disassembler \
     libartd-disassembler \
-    libsigchain \
-    dalvikvm \
-    dalvikvm32 \
-    dalvikvm64 \
     libart-gtest \
-    libegl \
+    libEGL \
+    libGLES_android \
+    libGLESv1_CM \
     libGLESv2 \
-    libGLESv1_CM
+    libsigchain
 
-  VANIR_LTO_FLAGS := \
+  EXODUS_LTO_FLAGS := \
     -flto \
     -fuse-linker-plugin \
     $(DEBUG_SYMBOL_FLAGS)
