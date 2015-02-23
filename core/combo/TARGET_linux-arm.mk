@@ -35,10 +35,10 @@ TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
 # Decouple NDK library selection with platform compiler version
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
 
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.8
+$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.9-linaro
 else
 $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
@@ -120,9 +120,10 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 # "-Wall -Werror" due to a commom idiom "ALOGV(mesg)" where ALOGV is turned
 # into no-op in some builds while mesg is defined earlier. So we explicitly
 # disable "-Wunused-but-set-variable" here.
-ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8, $($(combo_2nd_arch_prefix)TARGET_GCC_VERSION)),)
+ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8-linaro 4.9 4.9-linaro,$($(combo_2nd_arch_prefix)TARGET_GCC_VERSION)),)
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -fno-builtin-sin \
-			-fno-strict-volatile-bitfields
+			-fno-strict-volatile-bitfields \
+			-Wno-error=maybe-uninitialized
 endif
 
 # This is to avoid the dreaded warning compiler message:
