@@ -31,23 +31,10 @@ endif
 
 # EXODUS's FDO implementation
 ifeq ($(USE_FDO_OPTIMIZATION),true)
-  DEVICE_PROFILE := /.exodus_profiles/$(PRODUCT_OUT)/$(TARGET_$(combo_2nd_arch_prefix)ARCH)/$(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT)/profile_tests
+  DEVICE_PROFILE := /.exodus_profiles/$(PRODUCT_OUT)/$(TARGET_$(combo_2nd_arch_prefix)ARCH)/$(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT)/profile_tests_skia
 
   # Available optimizations
   SAMPLE_PROFILING_FLAGS := \
-      -fbranch-probabilities \
-      -fvpt \
-      -funroll-loops \
-      -fpeel-loops \
-      -ftracer \
-      -ftree-vectorize \
-      -finline-functions \
-      -fipa-cp \
-      -fipa-cp-clone \
-      -fpredictive-commoning \
-      -funswitch-loops \
-      -fgcse-after-reload \
-      -ftree-loop-distribute-patterns \
       -fprofile-correction \
       -DANDROID_FDO \
       -Wcoverage-mismatch \
