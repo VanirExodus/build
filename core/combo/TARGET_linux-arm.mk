@@ -37,19 +37,48 @@ endif
 # Decouple NDK library selection with platform compiler version
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
 
-ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.8
-else
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
-endif
-
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_$(combo_2nd_arch_prefix)ARCH)/$(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT).mk
 ifeq ($(strip $(wildcard $(TARGET_ARCH_SPECIFIC_MAKEFILE))),)
 $(error Unknown ARM architecture version: $(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT))
 endif
 
+# Set up arch flags
 include $(TARGET_ARCH_SPECIFIC_MAKEFILE)
+
+# Choose an optimized compiler based on arch-specific flags
+ifeq ($(BONE_STOCK),true)
+  ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
+    ARCH_GCC_TYPE := 4.8
+  else
+    ARCH_GCC_TYPE := $(TARGET_GCC_VERSION_EXP)
+  endif
+else
+  ifeq ($(USE_TUNED_GCC_TOOLCHAIN),true)
+    ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a15 krait denver)
+      ARCH_GCC_TYPE := 4.8-cortex-a15
+    endif
+    ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a9)
+      ARCH_GCC_TYPE := 4.9-cortex-a9
+    endif
+    ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a8 scorpion)
+      ARCH_GCC_TYPE := 4.9-cortex-a8
+    ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a7)
+      ARCH_GCC_TYPE := 4.9-cortex-a7
+    endif
+  endif
+endif
+
+# Set compiler
+ifneq ($(combo_2nd_arch_prefix)TARGET_GCC_VERSION),)
+  $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(ARCH_GCC_TYPE)
+else 
+  $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.8
+endif
+
+# FDO support
 include $(BUILD_SYSTEM)/combo/fdo.mk
+
+
 
 # You can set TARGET_TOOLS_PREFIX to get gcc from somewhere else
 ifeq ($(strip $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)),)
