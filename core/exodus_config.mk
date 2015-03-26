@@ -36,6 +36,7 @@
 # FSTRICT_ALIASING_WARNING_LEVEL := 0-3 for the level of intensity the compiler checks for violations
 # USE_LTO := true builds locally in modules with the -flto flags set in this config file
 # USE_FDO_OPTIMIZATION := true to use feedback directed optimization on locally enabled modules
+# USE_TUNED_GCC_TOOLCHAIN := true to use GCC prebuilts tuned to the specific mcpu/mtune per arch type
 
 # SET GLOBAL CONFIGURATION HERE:
 MAXIMUM_OVERDRIVE           ?= true
@@ -47,6 +48,7 @@ USE_FSTRICT_FLAGS           ?= true
 USE_BINARY_FLAGS            ?=
 USE_EXTRA_CLANG_FLAGS       ?=
 USE_FDO_OPTIMIZATION        ?=
+USE_TUNED_GCC_TOOLCHAIN     ?= true
 EXODUS_BIONIC_OPTIMIZATIONS ?= true
 ADDITIONAL_TARGET_ARM_OPT   ?=
 ADDITIONAL_TARGET_THUMB_OPT ?=
@@ -67,6 +69,7 @@ ifeq ($(BONE_STOCK),true)
   USE_BINARY_FLAGS        :=
   USE_EXTRA_CLANG_FLAGS   :=
   USE_FDO_OPTIMIZATION    :=
+  USE_TUNED_GCC_TOOLCHAIN :=
   EXODUS_BIONIC_OPTIMIZATIONS :=
   VANIR_ARM_OPT_LEVEL     := -O2
   VANIR_THUMB_OPT_LEVEL   := -Os
