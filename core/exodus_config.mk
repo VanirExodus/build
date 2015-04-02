@@ -182,6 +182,7 @@ ifeq ($(USE_FSTRICT_FLAGS),true)
     libavcodec \
     libavformat \
     libavutil \
+    libcrypto_static \
     libswscale
 
   FSTRICT_FLAGS := \
