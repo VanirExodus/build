@@ -42,14 +42,15 @@ MAXIMUM_OVERDRIVE           ?= true
 NO_DEBUG_SYMBOL_FLAGS       ?= true
 NO_DEBUG_FRAME_POINTERS     ?= true
 USE_GRAPHITE                ?=
-USE_LTO                     ?= true
-USE_FSTRICT_FLAGS           ?= true
+USE_LTO                     ?= false
+USE_FSTRICT_FLAGS           ?= false
 USE_BINARY_FLAGS            ?=
 USE_EXTRA_CLANG_FLAGS       ?=
 USE_FDO_OPTIMIZATION        ?=
-EXODUS_BIONIC_OPTIMIZATIONS ?= true
+EXODUS_BIONIC_OPTIMIZATIONS ?= false
 ADDITIONAL_TARGET_ARM_OPT   ?=
 ADDITIONAL_TARGET_THUMB_OPT ?=
+BONE_STOCK ?= true
 
 # Set some defaults
 VANIR_ARM_OPT_LEVEL         ?= -O2
