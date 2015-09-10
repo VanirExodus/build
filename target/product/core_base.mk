@@ -62,4 +62,11 @@ PRODUCT_PACKAGES += \
     requestsync \
     wifi-service
 
+# Backup Tool
+PRODUCT_COPY_FILES += \
+    build/tools/prebuilt/bin/backuptool.sh:install/backuptool.sh \
+    build/tools/prebuilt/bin/backuptool.functions:install/backuptool.functions \
+    build/tools/prebuilt/bin/50-hosts.sh:system/addon.d/50-hosts.sh \
+    build/tools/prebuilt/bin/blacklist:system/addon.d/blacklist
+	
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_minimal.mk)

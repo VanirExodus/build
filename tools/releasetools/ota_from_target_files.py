@@ -84,6 +84,9 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
       Specifies the number of worker-threads that will be used when
       generating patches for incremental updates (defaults to 3).
 
+  --backup <boolean>
+      Enable or disable the execution of backuptool.sh.
+      Disabled by default.
 """
 
 import sys
@@ -122,6 +125,7 @@ OPTIONS.updater_binary = None
 OPTIONS.oem_source = None
 OPTIONS.fallback_to_full = True
 OPTIONS.full_radio = False
+OPTIONS.backuptool = False
 
 def MostPopularKey(d, default):
   """Given a dict, return the key corresponding to the largest
@@ -483,6 +487,14 @@ def GetImage(which, tmpdir, info_dict):
 
   return sparse_img.SparseImage(path, mappath, clobbered_blocks)
 
+def CopyInstallTools(output_zip):
+  oldcwd = os.getcwd()
+  os.chdir(os.getenv('OUT'))
+  for root, subdirs, files in os.walk("install"):
+    for f in files:
+      p = os.path.join(root, f)
+      output_zip.write(p, p)
+  os.chdir(oldcwd)
 
 def WriteFullOTAPackage(input_zip, output_zip):
   # TODO: how to determine this?  We don't know what version it will
@@ -576,7 +588,17 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
 
+  CopyInstallTools(output_zip)
+  script.UnpackPackageDir("install", "/tmp")
+  script.SetPermissions("/tmp/backuptool.sh", 0, 0, 0755, None, None)
+  script.SetPermissions("/tmp/backuptool.functions", 0, 0, 0755, None, None)
+
   system_progress = 0.75
+ 
+  if OPTIONS.backuptool:
+    script.Mount("/system")
+    script.RunBackup("backup")
+    script.Unmount("/system")
 
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
@@ -647,7 +669,18 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
 
-  script.ShowProgress(0.05, 5)
+  if OPTIONS.backuptool:
+    script.ShowProgress(0.2, 10)
+    if block_based:
+      script.Mount("/system")
+
+    script.RunBackup("restore")
+
+    if block_based:
+      script.Unmount("/system")
+
+
+  script.ShowProgress(0.2, 10)
   script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.2, 10)
@@ -1531,6 +1564,8 @@ def main(argv):
       OPTIONS.updater_binary = a
     elif o in ("--no_fallback_to_full",):
       OPTIONS.fallback_to_full = False
+    elif o in ("--backup"):
+      OPTIONS.backuptool = bool(a.lower() == 'true')
     else:
       return False
     return True
@@ -1554,6 +1589,7 @@ def main(argv):
                                  "oem_settings=",
                                  "verify",
                                  "no_fallback_to_full",
+                                 "backup=",
                              ], extra_option_handler=option_handler)
 
   if len(args) != 2:
