@@ -36,12 +36,12 @@ except ImportError:
 
 # Config
 # set this to the default remote to use in repo
-default_rem = "roomservice"
+github_remote = "roomservice"
 # set this to the default revision to use (branch/tag name)
 default_rev = "bttr"
 # set this to the remote that you use for projects from your team repos
 # example fetch="https://github.com/omnirom"
-default_team_rem = "team-exodus"
+device_github = "Exodus-Devices"
 # this shouldn't change unless google makes changes
 local_manifest_dir = ".repo/local_manifests"
 # change this to your name on github (or equivalent hosting)
@@ -51,7 +51,7 @@ gerrit_url = "exodus-developers.net:8000"
 
 
 def check_repo_exists(git_data, device):
-    re_match = "^device_.*_{device}$".format(device=device)
+    re_match = "^devices/device_.*_{device}$".format(device=device)
     matches = filter(lambda x: re.match(re_match, x), git_data)
     if len(matches) != 1:
         raise Exception("{device} not found,"
@@ -90,6 +90,7 @@ def parse_device_directory(device_url, device):
         vendor=match.group('vendor'),
         device=device,
     )
+
 
 
 # Thank you RaYmAn
@@ -139,7 +140,7 @@ def indent(elem, level=0):
 
 
 def create_manifest_project(url, directory,
-                            remote=default_rem,
+                            remote=github_remote,
                             revision=default_rev):
     project_exists = check_project_exists(url, revision, directory)
 
@@ -223,7 +224,7 @@ def create_dependency_manifest(dependencies):
         repository = dependency.get("repository")
         target_path = dependency.get("target_path")
         revision = dependency.get("revision", default_rev)
-        remote = dependency.get("remote", default_rem)
+        remote = dependency.get("remote", github_remote)
 
         # not adding an organization should default to android_team
         # only apply this to github
@@ -263,11 +264,12 @@ def fetch_device(device):
         print("WARNING: Trying to fetch a device that's already there")
         return
     git_data = search_gerrit_for_device(device)
-    device_url = git_data['id']
+    device_url = git_data['id'].replace("devices%2F","")
     device_dir = parse_device_directory(device_url, device)
-    project = create_manifest_project(device_url,
+    github_url = ("%s/%s" % (device_github,device_url))
+    project = create_manifest_project(github_url,
                                       device_dir,
-                                      remote=default_team_rem)
+                                      remote=github_remote)
     if project is not None:
         manifest = append_to_manifest(project)
         write_to_manifest(manifest)
