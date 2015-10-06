@@ -41,7 +41,7 @@ github_remote = "roomservice"
 default_rev = "EXODUS-6.0"
 # set this to the remote that you use for projects from your team repos
 # example fetch="https://github.com/omnirom"
-device_github = "Exodus-Devices"
+device_github = "TeamExodus"
 # this shouldn't change unless google makes changes
 local_manifest_dir = ".repo/local_manifests"
 # change this to your name on github (or equivalent hosting)
@@ -51,7 +51,7 @@ gerrit_url = "exodus-developers.net:8000"
 
 
 def check_repo_exists(git_data, device):
-    re_match = "^devices/device_.*_{device}$".format(device=device)
+    re_match = "^device_.*_{device}$".format(device=device)
     matches = filter(lambda x: re.match(re_match, x), git_data)
     if len(matches) != 1:
         raise Exception("{device} not found,"
@@ -264,7 +264,7 @@ def fetch_device(device):
         print("WARNING: Trying to fetch a device that's already there")
         return
     git_data = search_gerrit_for_device(device)
-    device_url = git_data['id'].replace("devices%2F","")
+    device_url = git_data['id']
     device_dir = parse_device_directory(device_url, device)
     github_url = ("%s/%s" % (device_github,device_url))
     project = create_manifest_project(github_url,
